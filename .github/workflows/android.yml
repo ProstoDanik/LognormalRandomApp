@@ -40,3 +40,6 @@ jobs:
 
       - name: Build the project
         run: ./gradlew build
+
+      - name: Run Instrumentation Tests
+        run: ./gradlew connectedAndroidTest
