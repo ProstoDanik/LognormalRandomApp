@@ -28,16 +28,17 @@ jobs:
           sudo apt-get install -y wget unzip
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
           mkdir -p $HOME/android-sdk/cmdline-tools/latest
-          unzip cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools/latest
+          unzip -q cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools/latest
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
           yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0" "system-images;android-31;google_apis;x86_64"
+          sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0" "system-images;android-31;google_apis;x86_64" "emulator"
 
       - name: Start Emulator
         run: |
-          echo "Starting emulator"
-          $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -no-snapshot-load -no-boot-anim &
+          echo "Creating emulator"
+          echo "no" | avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --force
+          $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -no-snapshot &
           adb wait-for-device
           adb shell input keyevent 82
 
